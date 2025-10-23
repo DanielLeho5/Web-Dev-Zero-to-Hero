@@ -1,4 +1,4 @@
-import { cart, removeFromCart } from '../data/cart.js';
+import { cart, removeFromCart, calculateCartQuantity, updateQuantity } from '../data/cart.js';
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
@@ -35,14 +35,17 @@ cart.forEach((cartItem) => {
                 </div>
                 <div class="product-quantity">
                     <span>
-                    Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+                    Quantity: <span class="quantity-label js-quantity-${cartItem.productId}">${cartItem.quantity}</span>
                     </span>
-                    <span class="update-quantity-link link-primary">
+                    <span class="update-quantity-link link-primary js-update-quantity-link" data-product-id="${mathchingProduct.id}">
                     Update
                     </span>
+                    <input class="quantity-input js-quantity-input js-quantity-input-${mathchingProduct.id}" data-product-id="${mathchingProduct.id}">
+                    <span class="save-quantity-link link-primary js-save-quantity-link" data-product-id="${mathchingProduct.id}">Save</span>
                     <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${mathchingProduct.id}">
                     Delete
-                    </span>
+                    </span><br>
+                    <span class="update-validation js-update-validation-${mathchingProduct.id}"></span>
                 </div>
                 </div>
 
@@ -95,6 +98,12 @@ cart.forEach((cartItem) => {
     `;
 })
 
+function updateCheckoutCartQuantity() {
+    
+    const cartQuantity = calculateCartQuantity();
+    document.querySelector('.js-checkout-item-counter').innerHTML = cartQuantity + ' items';
+}
+
 document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
 
 document.querySelectorAll('.js-delete-link').forEach(link => {
@@ -103,5 +112,59 @@ document.querySelectorAll('.js-delete-link').forEach(link => {
         removeFromCart(productId);
         const container = document.querySelector(`.js-cart-item-container-${productId}`);
         container.remove();
+        updateCheckoutCartQuantity();
     })
 })
+
+document.querySelectorAll('.js-update-quantity-link').forEach(link => {
+    link.addEventListener('click', () => {
+        const {productId} = link.dataset
+        const container = document.querySelector(`.js-cart-item-container-${productId}`);
+        container.classList.add('is-editing-quantity');
+    })
+})
+
+document.querySelectorAll('.js-save-quantity-link').forEach(link => {
+    link.addEventListener('click', () => {
+        const {productId} = link.dataset;
+        saveUpdatedQuantity(productId);
+    })
+})
+
+document.querySelectorAll('.js-quantity-input').forEach(element => {
+    element.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            const {productId} = element.dataset;
+            saveUpdatedQuantity(productId);
+        }
+    })
+})
+
+function saveUpdatedQuantity(productId) {
+    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    container.classList.remove('is-editing-quantity');
+
+    const inputElement = document.querySelector(`.js-quantity-input-${productId}`);
+    let quantity = Number(inputElement.value);
+    let timeoutId;
+
+    if (quantity > 0) {
+        updateQuantity(productId, quantity);
+        document.querySelector(`.js-quantity-${productId}`).innerHTML = quantity;
+        updateCheckoutCartQuantity();
+    } else if (quantity === 0 && inputElement.value !== '') {
+        removeFromCart(productId);
+        container.remove();
+        updateCheckoutCartQuantity();
+    } else {
+        const validationMessage = document.querySelector(`.js-update-validation-${productId}`);
+        validationMessage.innerHTML = 'Invalid quantity';
+        clearInterval(timeoutId);
+        timeoutId = setTimeout(() => {
+            validationMessage.innerHTML = '';
+        }, 2000);
+    }
+    inputElement.value = '';
+}
+
+updateCheckoutCartQuantity();
