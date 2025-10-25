@@ -96,6 +96,8 @@ export function renderOrderSummary() {
         return html;
     }
 
+    console.log(cart)
+
     function updateCheckoutCartQuantity() {
         
         const cartQuantity = calculateCartQuantity();
