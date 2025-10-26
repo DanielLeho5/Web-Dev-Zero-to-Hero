@@ -22,7 +22,7 @@ export function renderOrderSummary() {
         const dateString = calculateDeliveryDate(deliveryOption);
 
         cartSummaryHTML += `
-            <div class="cart-item-container js-cart-item-container-${mathchingProduct.id}">
+            <div class="cart-item-container js-cart-item-container js-cart-item-container-${mathchingProduct.id}">
                 <div class="delivery-date">
                     Delivery date: ${dateString}
                 </div>
@@ -38,7 +38,7 @@ export function renderOrderSummary() {
                     <div class="product-price">
                         $${formatCurrency(mathchingProduct.priceCents)}
                     </div>
-                    <div class="product-quantity">
+                    <div class="product-quantity js-quantity-${mathchingProduct.id}">
                         <span>
                         Quantity: <span class="quantity-label js-quantity-${cartItem.productId}">${cartItem.quantity}</span>
                         </span>
@@ -47,7 +47,7 @@ export function renderOrderSummary() {
                         </span>
                         <input class="quantity-input js-quantity-input js-quantity-input-${mathchingProduct.id}" data-product-id="${mathchingProduct.id}">
                         <span class="save-quantity-link link-primary js-save-quantity-link" data-product-id="${mathchingProduct.id}">Save</span>
-                        <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${mathchingProduct.id}">
+                        <span class="delete-quantity-link link-primary js-delete-link js-delete-link-${mathchingProduct.id}" data-product-id="${mathchingProduct.id}">
                         Delete
                         </span><br>
                         <span class="update-validation js-update-validation-${mathchingProduct.id}"></span>
@@ -110,7 +110,6 @@ export function renderOrderSummary() {
             updateCheckoutCartQuantity();
             renderPaymentSummary();
             renderCheckoutHeader();
-
         })
     })
 
