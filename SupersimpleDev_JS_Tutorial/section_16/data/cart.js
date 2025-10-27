@@ -1,3 +1,5 @@
+import { products } from "../data/products.js";
+
 export let cart;
 loadFromStorage();
 
@@ -78,11 +80,25 @@ export function updateQuantity(productId, newQuantity) {
 
 export function updateDeliveryOption(productId, deliveryOptionId) {
     let matchingItem;
+    let productInCart = false;
+    let productExists = false;
+
+    products.forEach(product => {
+        if (product.id === productId) {
+            productExists = true;
+        }
+    })
+
     cart.forEach(cartItem => {
         if (productId === cartItem.productId) {
             matchingItem = cartItem;
+            productInCart = true;
         }
     })
+
+    if (!productInCart || !productExists) {
+        return;
+    }
 
     matchingItem.deliveryOptionId = deliveryOptionId;
 
