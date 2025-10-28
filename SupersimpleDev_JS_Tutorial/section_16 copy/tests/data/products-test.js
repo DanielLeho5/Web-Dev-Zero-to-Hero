@@ -1,9 +1,10 @@
 import {products, getProduct} from '../../data/products.js'
+import {Product} from '../../data/products.js';
 
 describe('test suite: getProduct()', () => {
     it('get a product by id', () => {
         expect(getProduct("e43638ce-6aa0-4b85-b27f-e1d07eb678c6")).toEqual(
-            {
+            new Product ({
                 id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
                 image: "images/products/athletic-cotton-socks-6-pairs.jpg",
                 name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
@@ -17,7 +18,7 @@ describe('test suite: getProduct()', () => {
                 "sports",
                 "apparel"
                 ]
-            }
+            })
         )
     })
 })
