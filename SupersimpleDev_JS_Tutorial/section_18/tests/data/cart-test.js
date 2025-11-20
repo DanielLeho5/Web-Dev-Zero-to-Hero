@@ -1,7 +1,8 @@
 import { addToCart, cart, loadFromStorage, removeFromCart, updateDeliveryOption } from '../../data/cart.js';
+import { products, loadProductsFetch } from '../../data/products.js';
 
 describe('test suite: addToCart()', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         spyOn(localStorage, 'setItem');
     })
 
@@ -105,7 +106,7 @@ describe('test suite: removeFromCart()', () => {
 })
 
 describe('test suite: updateDeliveryOption()', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         spyOn(localStorage, 'setItem');
         spyOn(localStorage, 'getItem').and.callFake(() => {
             return JSON.stringify([
@@ -121,6 +122,8 @@ describe('test suite: updateDeliveryOption()', () => {
                 }
             ]);
         })
+        
+        await loadProductsFetch()
         loadFromStorage();
     })
 

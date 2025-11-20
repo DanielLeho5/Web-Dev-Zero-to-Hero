@@ -3,6 +3,11 @@ import { products } from "../data/products.js";
 export let cart;
 loadFromStorage();
 
+export function updateCartQuantity() { 
+    const cartQuantity = calculateCartQuantity();
+    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+}
+
 export function loadFromStorage() {
     cart = JSON.parse(localStorage.getItem('cart'));
 
@@ -39,7 +44,7 @@ export function addToCart(productId, quantity = 1) {
     } else {
         cart.push({
             productId,
-            quantity: 1,
+            quantity,
             deliveryOptionId: '1'
         })
     }
@@ -115,4 +120,10 @@ export function loadCart(fun) {
 
   xhr.open('GET', 'https://supersimplebackend.dev/cart');
   xhr.send();
+}
+
+export async function loadCartFetch() {
+    const response = await fetch('https://supersimplebackend.dev/cart')
+    const text = await response.text()
+    console.log(text)
 }

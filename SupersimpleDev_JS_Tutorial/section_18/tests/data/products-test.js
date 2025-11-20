@@ -1,6 +1,13 @@
 import {products, getProduct, Product, Clothing, Appliance} from '../../data/products.js';
+import { loadProductsFetch } from '../../data/products.js';
 
 describe('test suite: getProduct()', () => {
+
+    beforeAll(async () => {
+        return await loadProductsFetch();
+    })
+
+    
     it('get a product by id', () => {
         expect(getProduct("e43638ce-6aa0-4b85-b27f-e1d07eb678c6")).toEqual(
             new Product ({

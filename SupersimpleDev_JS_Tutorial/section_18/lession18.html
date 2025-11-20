@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exercises</title>
+</head>
+<body>
+    
+    <script>
+
+        const xhr = new XMLHttpRequest()
+
+        xhr.open("GET", "https://supersimplebackend.dev/greeting")
+
+        xhr.onload = function() {
+            console.log(xhr.responseText)
+        }
+
+        xhr.send()
+
+        fetch("https://supersimplebackend.dev/greeting", {
+            method: "GET"
+        }).then((response) => {
+            return response.text()
+        }).then((text) => {
+            console.log(text)
+        })
+
+        async function getGreetingAsync() {
+            const res = await fetch("https://supersimplebackend.dev/greeting", {
+                method: "GET"
+            })
+            const text = await res.text()
+            console.log(text)
+        }
+        getGreetingAsync()
+
+        async function sendName() {
+
+            try {
+                const res = await fetch("https://supersimplebackend.dev/greeting", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    //body: JSON.stringify({name: "Daniel"})
+                })
+
+                if (res.status >= 400) {
+                    throw res
+                }
+
+                const text = await res.text()
+                console.log(text)
+            } catch (error) {
+                if (error.status === 400) {
+                    const errorjson = await error.json()
+                    console.log(errorjson)
+                } else {
+                    console.log("Network error")
+                }
+            }
+            
+        }
+        sendName()
+
+        async function getAmazon() {
+            try {
+                const res = await fetch("https://amazon.com")
+                const text = await res.text()
+                console.log(text)
+            } catch (error) {
+                console.log("CORS error")
+            }
+            
+        }
+        getAmazon()
+    </script>
+</body>
+</html>

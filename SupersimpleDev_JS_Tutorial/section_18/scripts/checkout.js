@@ -1,26 +1,18 @@
 import { renderOrderSummary } from "./checkout/order-summary.js";
 import { renderPaymentSummary } from "./checkout/payments-summary.js";
-//import '../data/cart-class.js';
-//import '../data/car.js';
-//import '../data/backend-practice.js';
 import { loadProductsFetch } from "../data/products.js";
-import { loadCart } from "../data/cart.js";
+import { loadCartFetch } from "../data/cart.js";
 
 async function loadPage() {
 
     try {
-        //throw "error1";
-
-        await loadProductsFetch()
-
-        const value = await new Promise((resolve, reject) => {
-            //throw 'error';
-            loadCart(() =>{
-                //reject('error3');
-                resolve('value3');
-            });
-        })
+        await Promise.all([
+            loadProductsFetch(),
+            loadCartFetch()
+        ])
+        
     } catch (error) {
+        console.log(error)
         console.log("Unexpected error. Please try again later.")
     }
 
@@ -29,47 +21,3 @@ async function loadPage() {
 }
 
 loadPage()
-
-/*
-Promise.all([
-    loadProductsFetch(),
-    new Promise((resolve) => {
-        loadCart(() =>{
-            resolve();
-        });
-    })
-
-]).then((values) => {
-    console.log(values)
-    renderOrderSummary();
-    renderPaymentSummary();
-})
-*/
-/*
-new Promise((resolve) => {
-    loadProducts(() => {
-        resolve('value1');
-    })
-
-}).then((value) => {
-    console.log(value)
-    return new Promise((resolve) => {
-        loadCart(() =>{
-            resolve();
-        });
-    })
-
-}).then(() => {
-    renderOrderSummary();
-    renderPaymentSummary();
-})
-*/
-
-/*
-loadProducts(() => {
-    loadCart(() => {
-        renderOrderSummary();
-        renderPaymentSummary();
-    });
-});
-*/
